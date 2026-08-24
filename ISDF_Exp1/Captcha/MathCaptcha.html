@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <title>Math CAPTCHA</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background:
+                linear-gradient(
+                    135deg,
+                    #667eea,
+                    #764ba2
+                );
+        }
+
+        .container {
+            width: 420px;
+            background: white;
+            padding: 35px;
+            border-radius: 18px;
+            box-shadow:
+                0 15px 40px
+                rgba(0, 0, 0, 0.25);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .description {
+            text-align: center;
+            color: #777;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        .question-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .question {
+            flex: 1;
+            padding: 20px;
+            background: #f3f4f6;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .refresh-icon {
+            width: 36px;
+            height: 36px;
+            padding: 0;
+            border: none;
+            border-radius: 50%;
+            background: #667eea;
+            color: white;
+            font-size: 22px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .refresh-icon:hover {
+            background: #5568d8;
+            transform: rotate(180deg);
+        }
+
+        input {
+            width: 100%;
+            padding: 13px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            outline: none;
+            text-align: center;
+            font-size: 18px;
+            margin-bottom: 12px;
+        }
+
+        input:focus {
+            border-color: #667eea;
+        }
+
+        .verify-button {
+            width: 100%;
+            padding: 13px;
+            border: none;
+            border-radius: 8px;
+            background: #667eea;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .verify-button:hover {
+            background: #5568d8;
+        }
+
+        #message {
+            text-align: center;
+            margin-top: 15px;
+            font-weight: bold;
+            color: #16a34a;
+        }
+    </style>
+
+</head>
+<body>
+<div class="container">
+
+    <h1> Math CAPTCHA</h1>
+    <p class="description">Solve the mathematical question</p>
+
+    <div class="question-row">
+        <div
+            class="question"
+            id="question">
+        </div>
+
+        <button
+            class="refresh-icon"
+            onclick="generateMathCaptcha()"
+            title="New Question">
+            ↻
+        </button>
+    </div>
+
+    <input type="number" id="answer" placeholder="Enter your answer">
+    <button
+        class="verify-button"onclick="verifyMathCaptcha()">Verify CAPTCHA
+    </button>
+    <div id="message"></div>
+</div>
+
+<script>
+    let correctAnswer;
+    function generateMathCaptcha() {
+
+        let num1 = Math.floor(Math.random() * 20) + 1;
+        let num2 = Math.floor(Math.random() * 20) + 1;
+        const operators =["+", "-", "×"];
+        const operator = operators[Math.floor(Math.random()*operators.length)];
+
+
+        if (operator === "+") {
+            correctAnswer =
+                num1 + num2;
+        }
+
+        else if (operator === "-") {
+
+            if (num1 < num2) {
+                let temp = num1;
+                num1 = num2;
+                num2 = temp;
+            }
+
+            correctAnswer =
+                num1 - num2;
+        }
+
+        else {
+            correctAnswer =
+                num1 * num2;
+        }
+
+        document.getElementById("question").innerText =
+            num1 +
+            " " +
+            operator +
+            " " +
+            num2 +
+            " = ?";
+
+        document.getElementById("answer").value = "";
+        document.getElementById("message").innerText = "";
+    }
+
+
+    function verifyMathCaptcha() {
+        const userAnswer =document.getElementById("answer").value;
+        const message = document.getElementById("message");
+
+        if (
+            userAnswer !== "" &&
+            Number(userAnswer) === correctAnswer
+        ) {
+            message.innerText =
+                "✓ CAPTCHA Verified Successfully!";
+
+        } else {
+            alert("Incorrect CAPTCHA");
+            generateMathCaptcha();
+        }
+    }
+
+    window.onload= generateMathCaptcha;
+</script>
+</body>
+</html>

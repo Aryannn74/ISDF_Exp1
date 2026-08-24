@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text CAPTCHA</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .container {
+            width: 420px;
+            background: white;
+            padding: 35px;
+            border-radius: 18px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .description {
+            text-align: center;
+            color: #777;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        .captcha-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        canvas {
+            width: 300px;
+            height: 100px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            background: #f3f3f3;
+        }
+
+        .refresh-icon {
+            width: 36px;
+            height: 36px;
+            padding: 0;
+            border: none;
+            border-radius: 50%;
+            background: #667eea;
+            color: white;
+            font-size: 22px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .refresh-icon:hover {
+            background: #5568d8;
+            transform: rotate(180deg);
+        }
+
+        input {
+            width: 100%;
+            padding: 13px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            outline: none;
+            text-align: center;
+            font-size: 18px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        input:focus {
+            border-color: #667eea;
+        }
+
+        .verify-button {
+            width: 100%;
+            padding: 13px;
+            border: none;
+            border-radius: 8px;
+            background: #667eea;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .verify-button:hover {
+            background: #5568d8;
+        }
+
+        #message {
+            text-align: center;
+            margin-top: 15px;
+            font-weight: bold;
+            color: #16a34a;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <h1>Text CAPTCHA</h1>
+    <p class="description"> Enter the characters shown in the image</p>
+    <div class="captcha-row">
+    
+        <canvas id="captchaCanvas" width="300" height="100"></canvas>
+
+        <button
+            class="refresh-icon"
+            onclick="generateCaptcha()"
+            title="Refresh CAPTCHA">
+            ↻
+        </button>
+    </div>
+
+    <input type="text" id="captchaInput" placeholder="Enter CAPTCHA" maxlength="6" autocomplete="off">
+
+    <button class="verify-button" onclick="verifyCaptcha()">Verify CAPTCHA</button>
+    <div id="message"></div>
+</div>
+
+<script>
+    let captchaText = "";
+    const characters = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+    function generateCaptcha() {
+        const length =
+            Math.floor(Math.random() * 2) + 5;
+
+        captchaText = "";
+        for (let i = 0; i < length; i++) {
+
+            captchaText +=
+                characters.charAt(
+                    Math.floor(
+                        Math.random() * characters.length
+                    )
+                );
+        }
+
+        drawCaptcha();
+
+        document.getElementById(
+            "captchaInput"
+        ).value = "";
+
+        document.getElementById(
+            "message"
+        ).innerText = "";
+    }
+
+
+    function drawCaptcha() {
+        const canvas =
+            document.getElementById("captchaCanvas");
+        const ctx =
+            canvas.getContext("2d");
+        ctx.fillStyle = "#f3f3f3";
+        ctx.fillRect(
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        );
+
+        for (let i = 0; i < 7; i++) {
+            ctx.beginPath();
+            ctx.moveTo(
+                Math.random() * 300,
+                Math.random() * 100
+            );
+            ctx.lineTo(
+                Math.random() * 300,
+                Math.random() * 100
+            );
+            ctx.strokeStyle = "#999";
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        }
+
+        ctx.font = "bold 42px Arial";
+        let x = 25;
+        for (let char of captchaText) {
+            ctx.save();
+            ctx.translate(x, 60);
+            ctx.rotate(
+                (Math.random() - 0.5) * 0.4
+            );
+            ctx.fillStyle = "#333";
+            ctx.fillText(char, 0, 0);
+            ctx.restore();
+            x += 42;
+        }
+
+        for (let i = 0; i < 100; i++) {
+            ctx.fillStyle = "#777";
+            ctx.fillRect(
+                Math.random() * 300,
+                Math.random() * 100,
+                2,
+                2
+            );
+        }
+    }
+
+    function verifyCaptcha() {
+        const input =
+            document.getElementById(
+                "captchaInput"
+            )
+            .value
+            .toUpperCase()
+            .trim();
+
+        const message =
+            document.getElementById(
+                "message"
+            );
+
+        if (input === captchaText) {
+            message.innerText =
+                "✓ CAPTCHA Verified Successfully!";
+
+        } else {
+            alert("Incorrect CAPTCHA");
+            generateCaptcha();
+        }
+    }
+
+    window.onload = generateCaptcha;
+</script>
+</body>
+</html>

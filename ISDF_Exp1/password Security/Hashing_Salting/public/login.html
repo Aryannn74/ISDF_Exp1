@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f2f2f2;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+
+        .container {
+            width: 420px;
+            background: white;
+            padding: 35px;
+            border-radius: 12px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 7px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #333;
+        }
+
+
+        button {
+            width: 100%;
+            padding: 13px;
+            margin-top: 25px;
+            border: none;
+            border-radius: 6px;
+            background: #333;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #555;
+        }
+
+        .message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 6px;
+            background: #eeeeee;
+            text-align: center;
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 25px;
+            color: #555;
+        }
+
+        .register-link a {
+            color: #333;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .security {
+            margin-top: 25px;
+            padding: 12px;
+            background: #e8f4ff;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <h1>Welcome Back</h1>
+    <p class="subtitle">Login to your account</p>
+
+    <!-- username and password input fields -->
+    <label for="username">Username</label>
+    <input type="text" id="username" placeholder="Enter username">
+
+
+    <label for="password">Password</label>
+    <input type="password" id="password" placeholder="Enter password">
+
+
+    <button onclick="loginUser()">Login</button>
+
+    <div id="loginMessage" class="message" style="display:none;"></div>
+    <div class="security">
+        <strong>Security:</strong>
+        <br><br>
+        Your entered password is hashed using
+        the stored salt and compared with the
+        hash in the database.
+    </div>
+
+
+    <div class="register-link">Don't have an account?
+        <a href="/register.html">Create Account</a>
+    </div>
+</div>
+
+<script>
+async function loginUser() {
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+    const message = document.getElementById("loginMessage");
+
+    if (!username || !password) {
+        message.style.display = "block";
+        message.innerHTML =
+            "Please enter username and password.";
+        return;
+    }
+
+    try {
+        const response =
+            await fetch("/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+                    username: username,
+                    password: password
+                })
+            });
+
+        const data =
+            await response.json();
+        message.style.display = "block";
+        message.innerHTML =
+            data.message;
+
+        if (data.success) {
+            message.innerHTML =
+                " Login successful!";
+        }
+    }
+
+    catch (error) {
+        message.style.display = "block";
+        message.innerHTML = "Unable to connect to server.";
+    }
+
+}
+</script>
+</body>
+</html>

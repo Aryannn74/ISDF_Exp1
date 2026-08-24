@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <title>Checkbox CAPTCHA</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg,#667eea,#764ba2);
+        }
+
+        .container {
+            width: 420px;
+            background: white;
+            padding: 35px;
+            border-radius: 18px;
+            box-shadow:0 15px 40px rgba(0, 0, 0, 0.25);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .description {
+            text-align: center;
+            color: #777;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        .checkbox-box {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background: #fafafa;
+        }
+
+        .checkbox-box input {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+        }
+
+        .checkbox-box label {
+            font-size: 17px;
+            color: #333;
+            cursor: pointer;
+        }
+
+        .verify-button {
+            width: 100%;
+            padding: 13px;
+            margin-top: 20px;
+            border: none;
+            border-radius: 8px;
+            background: #667eea;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .verify-button:hover {
+            background: #5568d8;
+        }
+
+        #message {
+            text-align: center;
+            margin-top: 15px;
+            font-weight: bold;
+            color: #16a34a;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Checkbox CAPTCHA</h1>
+    <p class="description">Verify that you are a human</p>
+    <div class="checkbox-box">
+        <input type="checkbox"id="robotCheck">
+        <label for="robotCheck">I'm not a robot</label>
+    </div>
+    <button class="verify-button" onclick="verifyCheckbox()">Verify CAPTCHA</button>
+    <div id="message"></div>
+</div>
+
+<script>
+    function verifyCheckbox() {
+        const checkbox =
+            document.getElementById(
+                "robotCheck"
+            );
+        const message =
+            document.getElementById(
+                "message"
+            );
+        if (checkbox.checked) {
+            message.innerText =
+                "✓ CAPTCHA Verified Successfully!";
+        } else {
+            alert("Incorrect CAPTCHA");
+        }
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "name": "password-security-experiment",
+  "version": "1.0.0",
+  "description": "Password strength analysis with hashing and salting",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "sql.js": "^1.13.0"
+  }
+}
